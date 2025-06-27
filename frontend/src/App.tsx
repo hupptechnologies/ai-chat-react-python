@@ -1,31 +1,46 @@
-import { useState } from 'react';
-import reactLogo from './assets/react.svg';
-import viteLogo from '/vite.svg';
-import './App.css';
+import React from 'react';
+import { Provider } from 'react-redux';
+import { store } from './store';
+import { ChatHistory } from './components/ChatHistory';
+import { ChatInput } from './components/ChatInput';
+import { StatusIndicator } from './components/StatusIndicator';
+import { useAppSelector } from './hooks/redux';
 
-function App() {
-  const [count, setCount] = useState(0);
+const ChatApp: React.FC = () => {
+  const { status, error } = useAppSelector((state) => state.chat);
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <div className="app-container">
+      <div className="chat-container">
+        <header className="chat-header">
+          <div className="header-content">
+            <div className="logo-container">
+              <div className="logo">
+                <span className="logo-text">AI</span>
+              </div>
+            </div>
+            <div className="header-text">
+              <h1 className="app-title">AI Chat Assistant</h1>
+            </div>
+          </div>
+          <StatusIndicator status={status} error={error} />
+        </header>
+        <ChatHistory />
+        <ChatInput />
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>count is {count}</button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">Click on the Vite and React logos to learn more</p>
-    </>
+      <footer className="app-footer">
+        <p>Built with React, TypeScript, Redux Toolkit & CSS</p>
+      </footer>
+    </div>
   );
-}
+};
+
+const App: React.FC = () => {
+  return (
+    <Provider store={store}>
+      <ChatApp />
+    </Provider>
+  );
+};
 
 export default App;
