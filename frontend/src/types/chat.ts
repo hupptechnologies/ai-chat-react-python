@@ -21,23 +21,3 @@ export interface ChatState {
   error: string | null;
   isConnected: boolean;
 }
-
-export interface SendMessageRequest {
-  message: string;
-}
-
-export interface SendMessageResponse {
-  message: Message;
-  conversationId: string;
-}
-
-export interface StreamMessageResponse {
-  content: string;
-  messageId: string;
-  isComplete: boolean;
-}
-
-export interface ApiError {
-  message: string;
-  code?: string;
-}
