@@ -26,7 +26,7 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
               {isStreaming && <span className="streaming-indicator" />}
             </div>
             <div className="message-meta">
-              <span className="message-time">{message.timestamp.toLocaleTimeString()}</span>
+              <span className="message-time">{message.created_at}</span>
               {isStreaming && <span className="streaming-text">Typing...</span>}
             </div>
           </div>

@@ -1,15 +1,13 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { PaperAirplaneIcon } from '@heroicons/react/24/solid';
-import { useAppDispatch, useAppSelector } from '../hooks/redux';
-import { sendMessage } from '../store/chatSlice';
+import { useSocket } from '../contexts/SocketContext';
 
 export const ChatInput: React.FC = () => {
   const [inputValue, setInputValue] = useState('');
   const textareaRef = useRef<HTMLTextAreaElement>(null);
-  const dispatch = useAppDispatch();
-  const { status } = useAppSelector((state) => state.chat);
+  const { sendMessage, isConnected } = useSocket();
 
-  const isDisabled = status === 'loading' || !inputValue.trim();
+  const isDisabled = !isConnected || !inputValue.trim();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -18,11 +16,7 @@ export const ChatInput: React.FC = () => {
     const message = inputValue.trim();
     setInputValue('');
 
-    try {
-      await dispatch(sendMessage({ message })).unwrap();
-    } catch (error) {
-      console.error('Failed to send message:', error);
-    }
+    sendMessage(message);
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -52,7 +46,7 @@ export const ChatInput: React.FC = () => {
             placeholder="Type your message here... (Press Enter to send, Shift+Enter for new line)"
             className="message-input"
             rows={1}
-            disabled={status === 'loading'}
+            disabled={!isConnected}
           />
         </div>
         <button type="submit" disabled={isDisabled} className="send-button">
@@ -60,14 +54,14 @@ export const ChatInput: React.FC = () => {
           <span className="send-text">Send</span>
         </button>
       </div>
-      {status === 'loading' && (
+      {!isConnected && (
         <div className="loading-indicator">
           <div className="loading-dots">
             <div className="loading-dot"></div>
             <div className="loading-dot" style={{ animationDelay: '0.1s' }}></div>
             <div className="loading-dot" style={{ animationDelay: '0.2s' }}></div>
           </div>
-          AI is thinking...
+          Connecting to chat server...
         </div>
       )}
     </form>

@@ -1,8 +1,8 @@
 export interface Message {
-  id: string;
+  id: number;
   content: string;
-  role: 'user' | 'assistant';
-  timestamp: Date;
+  role: 'user' | 'ai';
+  created_at: string;
   isStreaming?: boolean;
 }
 

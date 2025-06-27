@@ -9,8 +9,6 @@ import type {
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 class ChatApi {
-  private ws: WebSocket | null = null;
-
   async sendMessage(request: SendMessageRequest): Promise<SendMessageResponse> {
     try {
       const response = await fetch(`${API_BASE_URL}/api/chat/send`, {
@@ -62,37 +60,6 @@ class ChatApi {
     return {
       messages: [],
     };
-  }
-
-  connectWebSocket(): Promise<void> {
-    return new Promise((resolve, reject) => {
-      try {
-        this.ws = new WebSocket(`${API_BASE_URL.replace('http', 'ws')}/ws/chat`);
-
-        this.ws.onopen = () => {
-          console.log('WebSocket connected');
-          resolve();
-        };
-
-        this.ws.onerror = (error) => {
-          console.error('WebSocket error:', error);
-          reject(error);
-        };
-
-        this.ws.onclose = () => {
-          console.log('WebSocket disconnected');
-        };
-      } catch (error) {
-        reject(error);
-      }
-    });
-  }
-
-  disconnectWebSocket(): void {
-    if (this.ws) {
-      this.ws.close();
-      this.ws = null;
-    }
   }
 }
 

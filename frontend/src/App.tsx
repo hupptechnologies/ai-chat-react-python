@@ -5,6 +5,7 @@ import { ChatHistory } from './components/ChatHistory';
 import { ChatInput } from './components/ChatInput';
 import { StatusIndicator } from './components/StatusIndicator';
 import { useAppSelector } from './hooks/redux';
+import { SocketProvider } from './contexts/SocketContext';
 
 const ChatApp: React.FC = () => {
   const { status, error } = useAppSelector((state) => state.chat);
@@ -38,7 +39,9 @@ const ChatApp: React.FC = () => {
 const App: React.FC = () => {
   return (
     <Provider store={store}>
-      <ChatApp />
+      <SocketProvider>
+        <ChatApp />
+      </SocketProvider>
     </Provider>
   );
 };
