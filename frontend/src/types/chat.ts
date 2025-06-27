@@ -21,3 +21,9 @@ export interface ChatState {
   error: string | null;
   isConnected: boolean;
 }
+
+export interface StreamMessageResponse {
+  messageId: number;
+  content: string;
+  isComplete: boolean;
+}

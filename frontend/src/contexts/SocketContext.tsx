@@ -1,5 +1,4 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
-import type { ReactNode } from 'react';
+import React, { createContext, useEffect, useState } from 'react';
 import { useAppDispatch } from '../hooks/redux';
 import {
   setConnectionStatus,
@@ -8,28 +7,20 @@ import {
   clearMessages,
 } from '../store/chatSlice';
 import { socketService } from '../services/socketService';
-import type { SocketEventHandlers } from '../services/socketService';
-import type { StreamMessageResponse } from '../types/chat';
-
-interface SocketContextType {
-  isConnected: boolean;
-  connect: () => Promise<void>;
-  disconnect: () => void;
-  sendMessage: (message: string) => void;
-  sendTyping: (isTyping: boolean) => void;
-}
+import type {
+  SocketContextType,
+  SocketProviderProps,
+  Message,
+  StreamMessageResponse,
+} from '../types/index';
 
 const SocketContext = createContext<SocketContextType | undefined>(undefined);
-
-interface SocketProviderProps {
-  children: ReactNode;
-}
 
 export const SocketProvider: React.FC<SocketProviderProps> = ({ children }) => {
   const [isConnected, setIsConnected] = useState(false);
   const dispatch = useAppDispatch();
 
-  const eventHandlers: SocketEventHandlers = {
+  const eventHandlers = {
     onConnect: () => {
       setIsConnected(true);
       dispatch(setConnectionStatus(true));
@@ -38,7 +29,7 @@ export const SocketProvider: React.FC<SocketProviderProps> = ({ children }) => {
       setIsConnected(false);
       dispatch(setConnectionStatus(false));
     },
-    onError: (error) => {
+    onError: (error: Error) => {
       console.error('Socket error:', error);
       setIsConnected(false);
       dispatch(setConnectionStatus(false));
@@ -46,19 +37,19 @@ export const SocketProvider: React.FC<SocketProviderProps> = ({ children }) => {
     onMessage: (data: StreamMessageResponse) => {
       dispatch(
         updateStreamingMessage({
-          messageId: data.messageId,
+          messageId: data.messageId.toString(),
           content: data.content,
           isComplete: data.isComplete,
         })
       );
     },
-    onTyping: (data) => {
+    onTyping: (data: { isTyping: boolean; userId?: string }) => {
       // Handle typing indicators if needed
       console.log('Typing event:', data);
     },
-    onAllMessages: (messages) => {
+    onAllMessages: (messages: Message[]) => {
       dispatch(clearMessages());
-      messages.forEach((msg) => dispatch(addMessage(msg)));
+      messages.forEach((msg: Message) => dispatch(addMessage(msg)));
     },
   };
 
@@ -104,10 +95,4 @@ export const SocketProvider: React.FC<SocketProviderProps> = ({ children }) => {
   return <SocketContext.Provider value={value}>{children}</SocketContext.Provider>;
 };
 
-export const useSocket = (): SocketContextType => {
-  const context = useContext(SocketContext);
-  if (context === undefined) {
-    throw new Error('useSocket must be used within a SocketProvider');
-  }
-  return context;
-};
+export { SocketContext };

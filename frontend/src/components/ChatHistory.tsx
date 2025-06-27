@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { useAppSelector } from '../hooks/redux';
 import { ChatMessage } from './ChatMessage';
-import { useSocket } from '../contexts/SocketContext';
+import { useSocket } from '../contexts/useSocket';
 import { socketService } from '../services/socketService';
 
 export const ChatHistory: React.FC = () => {

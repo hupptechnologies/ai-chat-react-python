@@ -1,16 +1,7 @@
 import { io, Socket } from 'socket.io-client';
-import type { StreamMessageResponse, Message } from '../types/chat';
+import type { StreamMessageResponse, Message, SocketEventHandlers } from '../types/index';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
-
-export interface SocketEventHandlers {
-  onConnect?: () => void;
-  onDisconnect?: () => void;
-  onError?: (error: Error) => void;
-  onMessage?: (data: StreamMessageResponse) => void;
-  onTyping?: (data: { isTyping: boolean; userId?: string }) => void;
-  onAllMessages?: (messages: Message[]) => void;
-}
 
 class SocketService {
   private socket: Socket | null = null;
