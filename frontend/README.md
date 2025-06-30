@@ -1,4 +1,4 @@
-# React + TypeScript + Vite
+# AI Chat React Frontend
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
@@ -66,4 +66,107 @@ export default tseslint.config([
     },
   },
 ])
+```
+
+## Code Quality & Development Tools
+
+This project uses several tools to maintain high code quality and consistency:
+
+### Code Formatting
+- **Prettier**: Automatically formats code according to consistent style rules
+- **Configuration**: `.prettierrc` and `.prettierignore`
+
+### Linting
+- **ESLint**: Identifies and fixes code quality issues
+- **TypeScript ESLint**: TypeScript-specific linting rules
+- **React Hooks**: Enforces React Hooks rules
+- **Configuration**: `eslint.config.js`
+
+### Static Type Checking
+- **TypeScript**: Provides static type checking and IntelliSense
+- **Configuration**: `tsconfig.json` and `tsconfig.node.json`
+
+### Pre-commit Hooks
+- **Husky**: Manages Git hooks
+- **lint-staged**: Runs quality checks only on staged files
+- **commitlint**: Enforces conventional commit message format
+
+### Available Scripts
+
+```bash
+# Development
+npm run dev              # Start development server
+npm run build            # Build for production
+npm run preview          # Preview production build
+
+# Code Quality
+npm run lint             # Run ESLint
+npm run lint:fix         # Run ESLint with auto-fix
+npm run format           # Format code with Prettier
+npm run format:check     # Check code formatting
+npm run type-check       # Run TypeScript type checking
+npm run type-check:watch # Run TypeScript type checking in watch mode
+
+# Combined Quality Checks
+npm run quality-check    # Run all quality checks (lint + format + type-check)
+npm run quality-fix      # Fix all quality issues (lint:fix + format)
+```
+
+### Pre-commit Workflow
+
+1. **Automatic Formatting**: When you commit, Prettier automatically formats your code
+2. **Linting**: ESLint checks for code quality issues and fixes what it can
+3. **Type Checking**: TypeScript validates type safety
+4. **Commit Message Validation**: commitlint ensures conventional commit format
+
+### Commit Message Format
+
+This project uses [Conventional Commits](https://www.conventionalcommits.org/):
+
+```
+type(scope): description
+
+[optional body]
+
+[optional footer]
+```
+
+**Types:**
+- `feat`: New feature
+- `fix`: Bug fix
+- `docs`: Documentation changes
+- `style`: Code style changes (formatting, etc.)
+- `refactor`: Code refactoring
+- `perf`: Performance improvements
+- `test`: Adding or updating tests
+- `build`: Build system changes
+- `ci`: CI/CD changes
+- `chore`: Maintenance tasks
+- `revert`: Reverting previous commits
+
+**Examples:**
+```bash
+git commit -m "feat: add user authentication"
+git commit -m "fix: resolve navigation bug in mobile view"
+git commit -m "docs: update API documentation"
+git commit -m "style: format code with prettier"
+```
+
+### IDE Setup
+
+For the best development experience, install these VS Code extensions:
+- **ESLint**: ESLint integration
+- **Prettier**: Prettier integration
+- **TypeScript**: TypeScript support
+
+### Troubleshooting
+
+If pre-commit hooks fail:
+1. Run `npm run quality-fix` to fix all issues
+2. Stage the fixed files: `git add .`
+3. Try committing again
+
+If you need to bypass hooks (not recommended):
+```bash
+git commit --no-verify -m "your message"
 ```
