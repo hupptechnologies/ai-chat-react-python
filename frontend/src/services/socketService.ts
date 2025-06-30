@@ -39,6 +39,10 @@ class SocketService {
         this.socket.onmessage = (event) => {
           try {
             const data = JSON.parse(event.data);
+            if (data.error) {
+              this.eventHandlers.onError?.(new Error(data.error));
+              return;
+            }
             if (
               data.role === 'ai' &&
               typeof data.content === 'string' &&

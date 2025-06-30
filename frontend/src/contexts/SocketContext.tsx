@@ -33,6 +33,7 @@ export const SocketProvider: React.FC<SocketProviderProps> = ({ children }) => {
         console.error('Socket error:', error);
         setIsConnected(false);
         dispatch(setConnectionStatus(false));
+        dispatch({ type: 'chat/setError', payload: error.message });
       },
       onMessage: (data: StreamMessageResponse) => {
         dispatch(
