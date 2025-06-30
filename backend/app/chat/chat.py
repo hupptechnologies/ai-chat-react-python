@@ -7,9 +7,14 @@ from ..services.chat_service import ChatService
 router = APIRouter()
 
 
+def get_chat_service(db: AsyncSession = Depends(get_db)):
+    return ChatService(db)
+
+
 @router.get("/history", response_model=ConversationRead)
-async def get_conversation_history(db: AsyncSession = Depends(get_db)):
-    chat_service = ChatService(db)
+async def get_conversation_history(
+    chat_service: ChatService = Depends(get_chat_service),
+):
     try:
         messages = await chat_service.get_messages()
         return {"messages": messages}
