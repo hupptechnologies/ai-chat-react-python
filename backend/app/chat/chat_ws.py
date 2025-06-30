@@ -1,6 +1,7 @@
-from fastapi import APIRouter, WebSocket, WebSocketDisconnect, Depends
-from ..services.ai_service import stream_chat_completion
+from fastapi import APIRouter, Depends, WebSocket, WebSocketDisconnect
+
 from ..models import RoleEnum
+from ..services.ai_service import stream_chat_completion
 from ..services.chat_service import ChatService
 from .chat import get_chat_service
 
@@ -29,9 +30,7 @@ async def websocket_endpoint(
 
             # Stream AI response
             ai_content = ""
-            await websocket.send_json(
-                {"role": "ai", "content": "", "loading": True}
-            )
+            await websocket.send_json({"role": "ai", "content": "", "loading": True})
 
             try:
                 async for delta in stream_chat_completion(user_content):

@@ -1,10 +1,11 @@
 import uvicorn
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+
 from .chat.chat import router as api_router
 from .chat.chat_ws import router as ws_router
-from .database import init_db
 from .core.config import settings
+from .database import init_db
 
 app = FastAPI()
 

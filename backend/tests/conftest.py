@@ -1,10 +1,12 @@
-import pytest
 import asyncio
+
+import pytest
 from fastapi.testclient import TestClient
-from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
+from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import sessionmaker
-from app.main import app
+
 from app.database import get_db
+from app.main import app
 from app.models import Base
 
 # Test database URL
@@ -41,7 +43,9 @@ async def db_session(test_engine):
     transaction = await connection.begin()
 
     async_session_factory = sessionmaker(
-        bind=connection, class_=AsyncSession, expire_on_commit=False
+        bind=connection,
+        class_=AsyncSession,
+        expire_on_commit=False,
     )
     session = async_session_factory()
 

@@ -11,3 +11,6 @@ pytest
 pytest-asyncio
 pytest-cov
 websockets
+pre-commit
+ruff
+mypy

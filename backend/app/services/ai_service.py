@@ -1,4 +1,5 @@
 import openai
+
 from ..core.config import settings
 
 client = openai.AsyncOpenAI(api_key=settings.OPENAI_API_KEY)

@@ -1,10 +1,12 @@
-from sqlalchemy import Column, Integer, String, DateTime
-from sqlalchemy.ext.asyncio import AsyncAttrs
-from sqlalchemy.orm import declarative_base
 import datetime
 from enum import Enum
 
-Base = declarative_base()
+from sqlalchemy.ext.asyncio import AsyncAttrs
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
+
+
+class Base(AsyncAttrs, DeclarativeBase):
+    pass
 
 
 class RoleEnum(str, Enum):
@@ -12,10 +14,12 @@ class RoleEnum(str, Enum):
     AI = "ai"
 
 
-class Message(AsyncAttrs, Base):
+class Message(Base):
     __tablename__ = "messages"
 
-    id = Column(Integer, primary_key=True, index=True)
-    role = Column(String, nullable=False)  # 'user' or 'ai'
-    content = Column(String, nullable=False)
-    created_at = Column(DateTime, default=datetime.datetime.utcnow)
+    id: Mapped[int] = mapped_column(primary_key=True, index=True)
+    role: Mapped[str] = mapped_column()
+    content: Mapped[str] = mapped_column()
+    created_at: Mapped[datetime.datetime] = mapped_column(
+        default=datetime.datetime.utcnow
+    )
