@@ -1,6 +1,6 @@
 import type { SocketEventHandlers } from '../types/index';
 
-const baseUrl = import.meta.env.VITE_API_BASE_URL || 'http://192.168.1.71:8000';
+const baseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
 const WS_URL = `${baseUrl.replace('http', 'ws')}/ws/chat`;
 
 class SocketService {
