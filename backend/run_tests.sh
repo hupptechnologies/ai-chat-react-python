@@ -4,8 +4,13 @@ set -e # Exit immediately if a command exits with a non-zero status.
 # Get the directory where the script is located to ensure it runs from the correct context.
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 
-# Define the pytest command using the project's virtual environment for consistency.
-PYTEST_CMD="$SCRIPT_DIR/venv/bin/pytest"
+# Define the pytest command, preferring the project's virtual environment if it exists.
+if [ -f "$SCRIPT_DIR/venv/bin/pytest" ]; then
+    PYTEST_CMD="$SCRIPT_DIR/venv/bin/pytest"
+else
+    # Fallback to pytest in PATH for CI/other environments
+    PYTEST_CMD="pytest"
+fi
 
 # Change to the script's directory to ensure test paths are resolved correctly.
 cd "$SCRIPT_DIR"
