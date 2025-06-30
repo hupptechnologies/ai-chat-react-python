@@ -1,4 +1,5 @@
 from fastapi import APIRouter, Depends, WebSocket, WebSocketDisconnect
+from openai import AuthenticationError
 
 from ..models import RoleEnum
 from ..services.ai_service import stream_chat_completion
@@ -45,6 +46,13 @@ async def websocket_endpoint(
                     {"role": "ai", "content": ai_content, "loading": False}
                 )
 
+            except AuthenticationError:
+                await websocket.send_json(
+                    {
+                        "error": "Authentication with AI service failed. Please check your API key.",
+                        "loading": False,
+                    }
+                )
             except Exception as ai_error:
                 await websocket.send_json(
                     {
