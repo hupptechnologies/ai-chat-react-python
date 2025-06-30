@@ -2,6 +2,17 @@
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
+## Environment Variables
+
+Create a `.env` file in the frontend directory with the following variables:
+
+```bash
+# API Configuration
+VITE_API_BASE_URL=http://192.168.1.71:8000
+```
+
+This URL is used for both the REST API (for fetching chat history) and WebSocket connections (for real-time chat).
+
 Currently, two official plugins are available:
 
 - [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
