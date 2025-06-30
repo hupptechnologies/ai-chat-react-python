@@ -1,4 +1,4 @@
-import React, { createContext, useEffect, useState } from 'react';
+import React, { createContext, useEffect, useState, useCallback } from 'react';
 import { useAppDispatch } from '../hooks/redux';
 import {
   setConnectionStatus,
@@ -19,48 +19,52 @@ const SocketContext = createContext<SocketContextType | undefined>(undefined);
 export const SocketProvider: React.FC<SocketProviderProps> = ({ children }) => {
   const [isConnected, setIsConnected] = useState(false);
   const dispatch = useAppDispatch();
+  const connect = useCallback(async (): Promise<void> => {
+    const eventHandlers = {
+      onConnect: () => {
+        setIsConnected(true);
+        dispatch(setConnectionStatus(true));
+      },
+      onDisconnect: () => {
+        setIsConnected(false);
+        dispatch(setConnectionStatus(false));
+      },
+      onError: (error: Error) => {
+        console.error('Socket error:', error);
+        setIsConnected(false);
+        dispatch(setConnectionStatus(false));
+      },
+      onMessage: (data: StreamMessageResponse) => {
+        dispatch(
+          updateStreamingMessage({
+            messageId: data.messageId.toString(),
+            content: data.content,
+            isComplete: data.isComplete,
+          })
+        );
+      },
+      onTyping: (data: { isTyping: boolean; userId?: string }) => {
+        console.info('Typing event:', data);
+      },
+      onAllMessages: (messages: Message[]) => {
+        dispatch(clearMessages());
+        messages.forEach((msg: Message) => dispatch(addMessage(msg)));
+      },
+      onStreamingAIMessage: (content: string) => {
+        dispatch({ type: 'chat/updateStreamingAIMessage', payload: { content } });
+      },
+      onCompleteStreamingAIMessage: () => {
+        dispatch({ type: 'chat/completeStreamingAIMessage' });
+      },
+    };
 
-  const eventHandlers = {
-    onConnect: () => {
-      setIsConnected(true);
-      dispatch(setConnectionStatus(true));
-    },
-    onDisconnect: () => {
-      setIsConnected(false);
-      dispatch(setConnectionStatus(false));
-    },
-    onError: (error: Error) => {
-      console.error('Socket error:', error);
-      setIsConnected(false);
-      dispatch(setConnectionStatus(false));
-    },
-    onMessage: (data: StreamMessageResponse) => {
-      dispatch(
-        updateStreamingMessage({
-          messageId: data.messageId.toString(),
-          content: data.content,
-          isComplete: data.isComplete,
-        })
-      );
-    },
-    onTyping: (data: { isTyping: boolean; userId?: string }) => {
-      // Handle typing indicators if needed
-      console.log('Typing event:', data);
-    },
-    onAllMessages: (messages: Message[]) => {
-      dispatch(clearMessages());
-      messages.forEach((msg: Message) => dispatch(addMessage(msg)));
-    },
-  };
-
-  const connect = async (): Promise<void> => {
     try {
       await socketService.connect(eventHandlers);
     } catch (error) {
       console.error('Failed to connect socket:', error);
       throw error;
     }
-  };
+  }, [dispatch]);
 
   const disconnect = (): void => {
     socketService.disconnect();
@@ -75,14 +79,12 @@ export const SocketProvider: React.FC<SocketProviderProps> = ({ children }) => {
   };
 
   useEffect(() => {
-    // Auto-connect on mount
     connect().catch(console.error);
 
-    // Cleanup on unmount
     return () => {
       disconnect();
     };
-  }, []);
+  }, [connect]);
 
   const value: SocketContextType = {
     isConnected,

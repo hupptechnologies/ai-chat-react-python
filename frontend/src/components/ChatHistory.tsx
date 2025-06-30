@@ -1,25 +1,35 @@
 import React, { useEffect, useRef } from 'react';
-import { useAppSelector } from '../hooks/redux';
+import { useAppSelector, useAppDispatch } from '../hooks/redux';
 import { ChatMessage } from './ChatMessage';
-import { useSocket } from '../contexts/useSocket';
-import { socketService } from '../services/socketService';
+import { fetchChatHistory } from '../store/chatSlice';
 
 export const ChatHistory: React.FC = () => {
-  const { messages } = useAppSelector((state) => state.chat);
+  const { messages, status } = useAppSelector((state) => state.chat);
   const bottomRef = useRef<HTMLDivElement>(null);
-  const { isConnected } = useSocket();
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
-    if (isConnected) {
-      socketService.getSocket()?.emit('get_all_messages');
-    }
-  }, [isConnected]);
+    dispatch(fetchChatHistory());
+  }, [dispatch]);
 
   useEffect(() => {
     if (bottomRef.current) {
       bottomRef.current.scrollIntoView({ behavior: 'smooth' });
     }
   }, [messages]);
+
+  if (status === 'loading') {
+    return (
+      <div className="chat-history">
+        <div className="loading-state">
+          <div className="loading-content">
+            <div className="loading-spinner"></div>
+            <p className="loading-text">Loading chat history...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="chat-history">

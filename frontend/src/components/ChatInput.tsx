@@ -1,11 +1,14 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { PaperAirplaneIcon } from '@heroicons/react/24/solid';
 import { useSocket } from '../contexts/useSocket';
+import { useAppDispatch } from '../hooks/redux';
+import { addMessage } from '../store/chatSlice';
 
 export const ChatInput: React.FC = () => {
   const [inputValue, setInputValue] = useState('');
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const { sendMessage, isConnected } = useSocket();
+  const dispatch = useAppDispatch();
 
   const isDisabled = !isConnected || !inputValue.trim();
 
@@ -16,6 +19,14 @@ export const ChatInput: React.FC = () => {
     const message = inputValue.trim();
     setInputValue('');
 
+    dispatch(
+      addMessage({
+        id: Date.now(),
+        content: message,
+        role: 'user',
+        created_at: new Date().toISOString(),
+      })
+    );
     sendMessage(message);
   };
 
@@ -26,7 +37,6 @@ export const ChatInput: React.FC = () => {
     }
   };
 
-  // Auto-resize textarea
   useEffect(() => {
     if (textareaRef.current) {
       textareaRef.current.style.height = 'auto';

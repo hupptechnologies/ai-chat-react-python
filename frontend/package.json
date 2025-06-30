@@ -14,7 +14,6 @@
     "type-check:watch": "tsc --noEmit --watch",
     "quality-check": "npm run lint && npm run format:check && npm run type-check",
     "quality-fix": "npm run lint:fix && npm run format",
-    "prepare": "husky",
     "preview": "vite preview"
   },
   "dependencies": {
@@ -22,8 +21,7 @@
     "@reduxjs/toolkit": "^2.8.2",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
-    "react-redux": "^9.2.0",
-    "socket.io-client": "^4.8.1"
+    "react-redux": "^9.2.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.29.0",

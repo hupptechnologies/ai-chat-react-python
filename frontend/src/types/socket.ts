@@ -8,6 +8,8 @@ export interface SocketEventHandlers {
   onMessage?: (data: StreamMessageResponse) => void;
   onTyping?: (data: { isTyping: boolean; userId?: string }) => void;
   onAllMessages?: (messages: Message[]) => void;
+  onStreamingAIMessage?: (content: string) => void;
+  onCompleteStreamingAIMessage?: () => void;
 }
 
 export interface SocketContextType {
