@@ -460,6 +460,25 @@ body {
   animation-delay: 0.2s;
 }
 
+.message-text a {
+  color: #2563eb;
+  text-decoration: underline;
+  word-break: break-all;
+}
+
+.message-copy-button {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 2;
+  background: #fff;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  padding: 2px 8px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
 @keyframes bounce {
   0%,
   80%,

@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
-import { useAppSelector, useAppDispatch } from '../hooks/redux';
 import { ChatMessage } from './ChatMessage';
+import { useAppSelector, useAppDispatch } from '../hooks/redux';
 import { fetchChatHistory } from '../store/chatSlice';
 
 export const ChatHistory: React.FC = () => {
